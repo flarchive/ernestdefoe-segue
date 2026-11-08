@@ -1,0 +1,148 @@
+@import 'icons.less';
+
+// ── Loading screen ───────────────────────────────────────────────────────
+// Head.php adds .segue-loading to <html> before the first paint; forum.js
+// adds .segue-ready once the page is drawn, and removes both after the fade.
+// body::before is the curtain, body::after the icon. If the forum's
+// JavaScript never finishes, the screen lifts itself after 8 seconds so the
+// error message under it can be read.
+
+html.segue-loading body::before,
+html.segue-loading body::after {
+  content: '';
+  position: fixed;
+  z-index: 2147483646;
+  pointer-events: none;
+}
+
+html.segue-loading body::before {
+  inset: 0;
+  background: var(--body-bg);
+  animation: segue-give-up 0s 8s forwards;
+}
+
+html.segue-loading body::after {
+  .segue-icon-base();
+  z-index: 2147483647;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  // The icon waits a moment, so a fast load is a plain fade with no flicker
+  // of a spinner.
+  opacity: 0;
+}
+
+html.segue-loading[data-segue-icon='ring'] body::after { .segue-icon(ring); }
+html.segue-loading[data-segue-icon='orbit'] body::after { .segue-icon(orbit); }
+html.segue-loading[data-segue-icon='dots'] body::after { .segue-icon(dots); }
+html.segue-loading[data-segue-icon='bars'] body::after { .segue-icon(bars); }
+html.segue-loading[data-segue-icon='pulse'] body::after { .segue-icon(pulse); }
+html.segue-loading[data-segue-icon='logo'] body::after { .segue-icon(logo); }
+html.segue-loading[data-segue-icon='image'] body::after { .segue-icon(image); }
+
+// The fade-in, the safety lift, then the icon's own animation (--segue-anim).
+html.segue-loading body::after {
+  animation: segue-show 0.2s ease 0.1s forwards, segue-give-up 0s 8s forwards, var(--segue-anim-off, var(--segue-anim, none));
+}
+
+html.segue-loading.segue-ready body::before {
+  animation: segue-hide 0.3s ease forwards;
+}
+html.segue-loading.segue-ready body::after {
+  animation: segue-hide 0.15s ease forwards;
+}
+
+@keyframes segue-show {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes segue-hide {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes segue-give-up {
+  to {
+    visibility: hidden;
+  }
+}
+
+// ── Page transitions ─────────────────────────────────────────────────────
+// forum.js puts .segue-vt on <html> only while a transition runs, so these
+// names never exist outside one. The header and composer stay still; the
+// title and avatar pair named by forum.js glide; everything else fades and
+// rises. --segue-k (from Head.php) scales every duration for the speed setting.
+
+html.segue-vt {
+  .App-header {
+    view-transition-name: segue-header;
+  }
+  .App-navigation {
+    view-transition-name: segue-navigation;
+  }
+  .Composer {
+    view-transition-name: segue-composer;
+  }
+}
+
+.segue-vt-title {
+  view-transition-name: segue-title;
+  view-transition-class: segue-text;
+}
+.segue-vt-avatar {
+  view-transition-name: segue-avatar;
+}
+
+::view-transition-group(*) {
+  animation-duration: calc(0.5s * var(--segue-k, 1));
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+// A title changes size on the way: scale it by its height so the small list
+// title grows into the heading instead of jumping between font sizes.
+::view-transition-old(*.segue-text),
+::view-transition-new(*.segue-text) {
+  width: auto;
+  height: 100%;
+}
+::view-transition-old(*.segue-text) {
+  animation: calc(0.2s * var(--segue-k, 1)) ease-out both segue-out;
+}
+::view-transition-new(*.segue-text) {
+  animation: calc(0.3s * var(--segue-k, 1)) ease-in calc(0.1s * var(--segue-k, 1)) both segue-fade;
+}
+
+::view-transition-old(root) {
+  animation: calc(0.2s * var(--segue-k, 1)) ease-out both segue-out;
+}
+::view-transition-new(root) {
+  animation: calc(0.45s * var(--segue-k, 1)) cubic-bezier(0.22, 1, 0.36, 1) calc(0.05s * var(--segue-k, 1)) both segue-in;
+}
+
+// "Fade" style: one plain cross-fade, nothing moves.
+html[data-segue-style='fade'] {
+  &::view-transition-new(root) {
+    animation-name: segue-fade;
+  }
+}
+
+@keyframes segue-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes segue-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes segue-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

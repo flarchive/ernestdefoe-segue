@@ -1,0 +1,83 @@
+{
+    "name": "ernestdefoe/segue",
+    "description": "Segue — a loading screen instead of the blank flash when your forum opens, with your own loading icons, and page transitions where discussion titles and avatars glide from the list into the page.",
+    "keywords": [
+        "flarum",
+        "flarum-extension",
+        "loading",
+        "preloader",
+        "transitions",
+        "view-transitions",
+        "animation"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ernest Defoe",
+            "email": "ernestdefoe@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/ernestdefoe/segue",
+    "support": {
+        "issues": "https://github.com/ernestdefoe/segue/issues",
+        "source": "https://github.com/ernestdefoe/segue"
+    },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://buymeacoffee.com/ernestdefoe"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "flarum/core": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ErnestDefoe\\Segue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ErnestDefoe\\Segue\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Segue",
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-wand-magic-sparkles",
+                "backgroundColor": "#7c3aed",
+                "color": "#fff"
+            },
+            "optional-dependencies": [
+                "flarum/tags"
+            ]
+        }
+    },
+    "require-dev": {
+        "flarum/phpstan": "^2.0",
+        "flarum/testing": "^2.0"
+    },
+    "scripts": {
+        "test": [
+            "@test:integration"
+        ],
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php",
+        "analyse:phpstan": "phpstan analyse"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+        "analyse:phpstan": "Run static analysis"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
+}

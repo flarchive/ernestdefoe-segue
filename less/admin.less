@@ -1,0 +1,97 @@
+@import 'icons.less';
+
+// The icon picker: one tile per icon, each showing the icon running.
+.SegueIcons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 10px;
+  margin: 8px 0 6px;
+  // .Form-group is a flex column: without these the grid widens to fit all
+  // its tiles on one row and runs off a phone screen.
+  width: 100%;
+  min-width: 0;
+  max-width: 760px;
+}
+
+.SegueIcons-cell {
+  position: relative;
+  min-width: 0;
+}
+
+.SegueIcons-tile {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 112px;
+  padding: 14px 8px 10px;
+  border: 2px solid var(--control-bg);
+  border-radius: var(--border-radius);
+  background: var(--body-bg);
+  color: var(--text-color);
+  font: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--muted-color);
+  }
+
+  &.is-active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 22%, transparent);
+  }
+}
+
+.SegueIcons-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 64px;
+  overflow: hidden;
+  --segue-size: 40px;
+}
+
+.SegueIcons-label {
+  font-size: 12px;
+  color: var(--muted-color);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.SegueIcons-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.SegueIcon {
+  .segue-icon-base();
+  flex-shrink: 0;
+  animation: var(--segue-anim-off, var(--segue-anim, none));
+
+  &--ring { .segue-icon(ring); }
+  &--orbit { .segue-icon(orbit); }
+  &--dots { .segue-icon(dots); }
+  &--bars { .segue-icon(bars); }
+  &--pulse { .segue-icon(pulse); }
+  &--logo { .segue-icon(logo); width: 100%; }
+  &--image { .segue-icon(image); }
+}
+
+.SegueIcons-upload {
+  border-style: dashed;
+  color: var(--muted-color);
+
+  .icon {
+    font-size: 20px;
+  }
+}
